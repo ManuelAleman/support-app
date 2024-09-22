@@ -1,0 +1,27 @@
+{
+    "email": "ana.torres@example.com",
+    "password": "ContraseñaSegura123"
+}
+
+{
+    "email": "carlos.gomez@example.com",
+    "password": "ContraseñaAdmin456"
+}
+
+{
+    "email": "usuario.inexistente@example.com",
+    "password": "CualquierContraseña"
+}
+
+{
+    "email": "laura.martinez@example.com",
+    "password": "ContraseñaIncorrecta"
+}
+
+{
+    "password": "ContraseñaSegura123"
+}
+
+{
+    "email": "ana.torres@example.com"
+}

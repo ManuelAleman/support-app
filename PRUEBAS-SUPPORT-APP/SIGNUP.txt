@@ -1,0 +1,41 @@
+{
+    "name": "Ana Torres",
+    "email": "ana.torres@example.com",
+    "phone": "5551234567",
+    "password": "ContraseñaSegura123",
+    "passwordConfirm": "ContraseñaSegura123",
+    "role": "user"
+},
+{
+    "name": "Carlos Gómez",
+    "email": "carlos.gomez@example.com",
+    "phone": "5559876543",
+    "password": "ContraseñaAdmin456",
+    "passwordConfirm": "ContraseñaAdmin456",
+    "role": "admin"
+},
+{
+    "name": "Laura Martínez",
+    "email": "laura.martinez@example.com",
+    "phone": "5557654321",
+    "password": "SeguraLaura789",
+    "passwordConfirm": "SeguraLaura789",
+    "role": "user"
+},
+{
+    "name": "Pedro Sánchez",
+    "email": "ana.torres@example.com",  // Este email ya está registrado
+    "phone": "5553334444",
+    "password": "ContraseñaDiferente101",
+    "passwordConfirm": "ContraseñaDiferente101",
+    "role": "user"
+},
+{
+    "name": "Sofía Ruiz",
+    "email": "sofia.ruiz@example.com",
+    "phone": "5552223333",
+    "password": "ContraseñaInsegura",
+    "passwordConfirm": "ContraseñaDiferente",
+    "role": "user"
+}
+
