@@ -1,14 +1,14 @@
 import React from 'react'
-import SignUpForm from '../components/SignUpForm'
+import DashboardSupport from '@/components/DashboardSupport'
 import Footer from '@/components/Footer'
 import "./../app/globals.css";
-const SignUpPage = () => {
+const DashboardPage = () => {
   return (
     <div>
-      <SignUpForm />
+      <DashboardSupport />
       <Footer />
     </div>
   )
 }
 
-export default SignUpPage
+export default DashboardPage
