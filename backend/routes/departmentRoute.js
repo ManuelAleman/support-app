@@ -5,7 +5,7 @@ const { createDepartment, getDepartmentByUser } = require("../controller/departm
 const router = express.Router();
 
 router.post("/create", authMiddleware, createDepartment);
-router.get("/getByUser", authMiddleware, inChargeMiddleware, getDepartmentByUser);
+router.get("/getByUser/:id", authMiddleware, getDepartmentByUser);
 
 
 

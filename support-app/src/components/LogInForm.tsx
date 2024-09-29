@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function LogIn() {
   const router = useRouter();
@@ -8,8 +9,6 @@ export default function LogIn() {
     email: '',
     password: '',
   });
-  const [userId, setUserId] = useState('');
-
   const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,9 +37,9 @@ export default function LogIn() {
       }
   
       if (data.token) {
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('userId', data.userId);
-        router.push('/DashboardPage');
+        Cookies.set('authToken', data.token, { expires: 7 });
+        Cookies.set('userId', data.userId, { expires: 7 });
+        router.push('/');
       } else {
         setError('Error desconocido. Inténtalo de nuevo.');
       }
@@ -50,7 +49,6 @@ export default function LogIn() {
     }
   };
   
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form

@@ -4,9 +4,9 @@ const bcrypt = require('bcryptjs');
 
 exports.registerController = async (req, res) => {
     try {
-        const { name, email, phone, password, passwordConfirm, role } = req.body;
+        const { name, phone, email , password, confirmPassword, role } = req.body;
 
-        if (password !== passwordConfirm) {
+        if (password !== confirmPassword) {
             return res.status(400).json({
                 status: 'fail',
                 message: 'Passwords are not the same!'
@@ -69,13 +69,17 @@ exports.loginController = async (req, res) => {
                 message: 'Invalid credentials'
             });
         }
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+
+        const userId = user._id
+
+        const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN
         });
 
         res.status(200).json({
             status: 'success',
-            token
+            token,
+            userId
         });
 
 

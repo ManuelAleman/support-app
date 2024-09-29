@@ -136,7 +136,9 @@ exports.getDepartmentByUser = async (req, res) => {
 
         res.status(200).json({
             status: 'success',
-            data: department
+            data: department,
+            userName : user.name, 
+            userRole: user.role
         });
 
         

@@ -17,6 +17,7 @@ app.use(morgan("dev"));
 
 
 app.use("/auth", require("./routes/authRoute"));
+app.use("/user", require("./routes/userRoute"));
 app.use("/department", require("./routes/departmentRoute"));
 
 
