@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import IncidentsOpen from './IncidentsOpen';
-import { useUser } from './../utils/UserContext';
 
 const DashboardUser = ({user, setUser} : any) => {
   const router = useRouter();

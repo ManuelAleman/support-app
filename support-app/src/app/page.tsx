@@ -1,15 +1,6 @@
-"use client";
-import { useEffect, useState } from 'react';
-import LogInPage from '@/pages/LogInPage';
+"use client"
 import DashboardPage from '@/pages/DashboardPage';
-import Cookies from 'js-cookie';
-import "./globals.css";
-import { UserProvider } from './../utils/UserContext';
-
+import MyApp from '@/pages/_app';
 export default function Home() {
-  return (
-    <UserProvider>
-      <DashboardPage />
-    </UserProvider>
-  );
+  return <MyApp Component={DashboardPage}/>
 }

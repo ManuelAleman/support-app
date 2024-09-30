@@ -114,7 +114,7 @@ exports.addAreasToDepartment = async (req, res) => {
     }
 }
 
-exports.getDepartmentByUser = async (req, res) => {
+exports.getMyBuildings = async (req, res) => {
     try {
         const user = await userModel.findById(req.query.id);
 
@@ -125,9 +125,9 @@ exports.getDepartmentByUser = async (req, res) => {
             });
         }
 
-        const department = await departmentModel.find({ inCharge: user._id });
+        const departments = await departmentModel.find({ inCharge: user._id });
 
-        if (!department) {
+        if (!departments) {
             return res.status(404).json({
                 status: 'fail',
                 message: 'Department not found'
@@ -136,9 +136,7 @@ exports.getDepartmentByUser = async (req, res) => {
 
         res.status(200).json({
             status: 'success',
-            data: department,
-            userName : user.name, 
-            userRole: user.role
+            departments
         });
 
         

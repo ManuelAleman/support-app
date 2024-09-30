@@ -1,31 +1,17 @@
+"use client"
 import React, {useEffect} from 'react';
 import DashboardUser from '@/components/DashboardUser';
 import Footer from '@/components/Footer';
 import { useUser } from './../utils/UserContext';
 import "./../app/globals.css";
 import { useRouter } from 'next/navigation';
-interface UserProp{
-  id: string,
-  name: string,
-  email: string,
-  phone: string,
-  role: string,
-  rating: number,
-}
-
-interface UserContextType {
-  user: UserProp | null;
-  setUser: React.Dispatch<React.SetStateAction<any>>;
-  loading: boolean;
-}
-
-const DashboardPage: React.FC = () => {
+import LoadingComponent from '@/utils/LoadingComponent';
+const DashboardPage = () => {
   const { user, setUser, loading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
   if(loading) return;
-  console.log(user)
   if (!user) {
       router.push('/LogInPage');
     }
@@ -33,16 +19,16 @@ const DashboardPage: React.FC = () => {
   );
 
   return (
-    loading ? (
-      <div>Loading...</div>
-    ) : (
-      user && (
-        <div> 
-          <DashboardUser user={user} setUser={setUser} /> 
-          <Footer />
-        </div>
-      )
-    )
+    <LoadingComponent/>
+    // loading ? (
+    //   <LoadingComponent />
+    // ) : (
+    //   user && (
+    //     <div> 
+    //       <DashboardUser user={user} setUser={setUser} /> 
+    //     </div>
+    //   )
+    // )
   );
   
   
