@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useUser } from '../utils/UserContext';
 import { useRouter } from 'next/navigation';
-import DashboardSupport from '@/components/DashboardSupport';
+import DashboardSupport from '@/components/dashboardComponents/DashboardSupport';
 import Footer from '@/components/Footer';
 import './../app/globals.css';
 

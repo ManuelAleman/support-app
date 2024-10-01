@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import { useUser } from './../utils/UserContext';
 import "./../app/globals.css";
 import { useRouter } from 'next/navigation';
-import LoadingComponent from '@/utils/LoadingComponent';
+import LoadingPage from './LoadingPage';
 const DashboardPage = () => {
   const { user, setUser, loading } = useUser();
   const router = useRouter();
@@ -19,16 +19,15 @@ const DashboardPage = () => {
   );
 
   return (
-    <LoadingComponent/>
-    // loading ? (
-    //   <LoadingComponent />
-    // ) : (
-    //   user && (
-    //     <div> 
-    //       <DashboardUser user={user} setUser={setUser} /> 
-    //     </div>
-    //   )
-    // )
+    loading ? (
+      <LoadingPage />
+    ) : (
+      user && (
+        <div> 
+          <DashboardUser user={user} setUser={setUser} /> 
+        </div>
+      )
+    )
   );
   
   

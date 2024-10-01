@@ -5,7 +5,7 @@ import { URL_API } from './CONSTANTS';
 import Cookies from 'js-cookie';
 
 interface UserProp {
-    id: string;
+    _id: string;
     name: string;
     email: string;
     phone: string;
@@ -28,11 +28,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        console.log("UserProvider mounted or updated");
-
+        console.log("Fetching user data...");
+    
         const fetchUser = async () => {
             const token = Cookies.get('authToken');
-           
+            console.log("Token:", token);
+            
             if (token) {
                 try {
                     const response = await axios.get(URL_API + "/user/getMyUser", {
@@ -40,18 +41,18 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                             'Authorization': `Bearer ${token}`,
                         }
                     });
+                    console.log("User data:", response.data.user);
                     setUser(response.data.user);
                 } catch (error) {
                     console.error('Error fetching user data', error);
                 }
-                setLoading(false);
-            } else {
-                setLoading(false);
             }
+            setLoading(false);
         };
-       
+    
         fetchUser();
     }, []);
+    
 
     return (
         <UserContext.Provider value={{ user, setUser, loading }}>
