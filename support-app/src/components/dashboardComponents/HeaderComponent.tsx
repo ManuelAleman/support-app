@@ -1,7 +1,6 @@
 import React from 'react'
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { useUser } from './../utils/UserContext';
 const HeaderComponent = ({user, setUser} : any) => {
     const router = useRouter();
     const handleLogout = () => {

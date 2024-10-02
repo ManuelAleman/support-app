@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import BuildingCard from "@/components/cards/BuildingsCard";
 import AddBuildingModal from "@/components/modals/NewBuildingModal";
+import ErrorModal from "@/components/modals/ErrorModal";
 import { useUser } from '@/utils/UserContext';
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
@@ -23,6 +24,8 @@ const BuildingsComponent = () => {
   const { user, loading } = useUser();
   const [buildings, setBuildings] = useState<BuildingsComponentProps[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -47,7 +50,6 @@ const BuildingsComponent = () => {
         const data = await response.json();
         
         if (data.status === "success") {
-          console.log(data);
           setBuildings(data.departments);
         } else {
           console.error(data.message);
@@ -60,10 +62,35 @@ const BuildingsComponent = () => {
     fetchBuildings();
   }, [user]);
 
-  const handleAddBuilding = (name: string, inCharge: string) => {
-    setBuildings([...buildings, { name, inCharge, areas: [], _id: '' }]); 
+  const handleAddBuilding = async (name: string, inCharge: string) => {
+    const token = Cookies.get('authToken');
+    try {
+      const response = await fetch('http://localhost:8080/department/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ name, inCharge }),
+      });
+  
+      const data = await response.json();
+  
+      if (data.status === "success") {
+        setBuildings([...buildings, { name, inCharge, areas: [], _id: data.newDepartmentId }]);
+        setErrorMessage("");
+        setIsModalOpen(false);
+      } else {
+        setErrorMessage(data.message);
+        setIsErrorModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Error adding building:", error);
+      setErrorMessage("Error adding building.");
+      setIsErrorModalOpen(true);
+    }
   };
-
+  
   const handleAddArea = (buildingIndex: number, newArea: BuildingsAreasComponentProps) => {
     const updatedBuildings = [...buildings];
     updatedBuildings[buildingIndex].areas.push(newArea);
@@ -87,7 +114,6 @@ const BuildingsComponent = () => {
             key={building._id}
             index={index}
             name={building.name}
-            inCharge={building.inCharge}
             areas={building.areas}
             buildingId={building._id}
             onAddArea={handleAddArea}
@@ -96,9 +122,22 @@ const BuildingsComponent = () => {
       </div>
       <AddBuildingModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => {
+          setIsModalOpen(false);
+          setErrorMessage("");
+        }}
+        userId={user?._id || ""}
         onAddBuilding={handleAddBuilding}
       />
+      {isErrorModalOpen && (
+        <ErrorModal 
+          message={errorMessage} 
+          onClose={() => {
+            setIsErrorModalOpen(false);
+            setErrorMessage("");
+          }} 
+        />
+      )}
     </div>
   );
 };

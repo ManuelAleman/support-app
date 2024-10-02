@@ -4,21 +4,21 @@ interface AddBuildingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddBuilding: (name: string, inCharge: string) => void;
+  userId: string;
 }
 
-const AddBuildingModal: React.FC<AddBuildingModalProps> = ({
+const AddBuildingModal= ({
   isOpen,
   onClose,
   onAddBuilding,
-}) => {
+  userId, 
+} : AddBuildingModalProps ) => {
   const [newBuildingName, setNewBuildingName] = useState("");
-  const [newBuildingInCharge, setNewBuildingInCharge] = useState("");
 
   const handleAdd = () => {
-    if (newBuildingName && newBuildingInCharge) {
-      onAddBuilding(newBuildingName, newBuildingInCharge);
+    if (newBuildingName) {
+      onAddBuilding(newBuildingName, userId); 
       setNewBuildingName("");
-      setNewBuildingInCharge("");
       onClose();
     }
   };
@@ -28,22 +28,14 @@ const AddBuildingModal: React.FC<AddBuildingModalProps> = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded shadow-md">
-        <h2 className="text-lg font-semibold mb-4 text-black">
-          Agregar Nuevo Edificio
-        </h2>
+        <h2 className="text-lg font-semibold mb-4 text-black">Agregar Nuevo Edificio</h2>
+        
         <input
           type="text"
           value={newBuildingName}
           onChange={(e) => setNewBuildingName(e.target.value)}
           className="border rounded-md p-2 w-full mb-2 text-black"
           placeholder="Nombre del edificio"
-        />
-        <input
-          type="text"
-          value={newBuildingInCharge}
-          onChange={(e) => setNewBuildingInCharge(e.target.value)}
-          className="border rounded-md p-2 w-full mb-4 text-black"
-          placeholder="Encargado del edificio"
         />
         <div className="flex justify-end">
           <button

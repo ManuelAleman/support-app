@@ -9,7 +9,6 @@ interface BuildingsAreasComponentProps {
 
 interface BuildingsComponentProps {
   name: string;
-  inCharge: string;
   areas: BuildingsAreasComponentProps[];
   buildingId: string;
   onAddArea: (buildingIndex: number, newArea: BuildingsAreasComponentProps) => void;
@@ -17,7 +16,6 @@ interface BuildingsComponentProps {
 
 const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
   name,
-  inCharge,
   areas,
   index,
   buildingId,
@@ -67,7 +65,6 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
       <div className="flex justify-between items-center">
         <div>
           <h4 className="font-medium text-black">{name}</h4>
-          <p className="text-gray-600">Encargado: {inCharge}</p>
           <p className="text-gray-600">Número de Áreas: {areas.length}</p>
         </div>
         <button className="mt-2 text-blue-600 hover:underline" onClick={handleToggle}>

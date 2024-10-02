@@ -5,7 +5,7 @@ interface SideNavComponentProps {
   setController: (controller: string) => void;
 }
 
-const SideNavComponent: React.FC<SideNavComponentProps> = ({ setController }) => {
+const SideNavComponent= ({ setController } : SideNavComponentProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
