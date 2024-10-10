@@ -5,10 +5,10 @@ const areaSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please tell us the area name!']
     },
-    equipment: {
+    equipments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Equipment'
-    },
+    }],
     tasks: {
         type: Array,
         default: []
@@ -17,6 +17,5 @@ const areaSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const Area = mongoose.model('Area', areaSchema);
+module.exports = mongoose.models.Area || mongoose.model('Area', areaSchema);
 
-module.exports = Area;

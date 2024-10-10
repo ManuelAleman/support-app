@@ -116,6 +116,7 @@ const BuildingsComponent = () => {
             name={building.name}
             areas={building.areas}
             buildingId={building._id}
+            userName={user?.name || ""}
             onAddArea={handleAddArea}
           />
         ))}

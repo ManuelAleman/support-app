@@ -10,6 +10,10 @@ const EquipmentPartsSchema = new mongoose.Schema({
         enum: ['GPU', 'CPU', 'RAM', 'SSD', 'HDD', 'Motherboard', 'Power Supply', 'Cooling', 'Other'],
         required: true
     },
+    model : {
+        type: String,
+        required: true
+    },
     quantity: {
         type: Number,
         required: true

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
+import AreaInformationCard from "./AreaInformationCard";
 
 interface BuildingsAreasComponentProps {
   name: string;
@@ -9,6 +10,7 @@ interface BuildingsAreasComponentProps {
 
 interface BuildingsComponentProps {
   name: string;
+  userName: string
   areas: BuildingsAreasComponentProps[];
   buildingId: string;
   onAddArea: (buildingIndex: number, newArea: BuildingsAreasComponentProps) => void;
@@ -19,6 +21,7 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
   areas,
   index,
   buildingId,
+  userName,
   onAddArea,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -64,7 +67,8 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
     <div className="border rounded-md p-4 shadow hover:shadow-lg transition">
       <div className="flex justify-between items-center">
         <div>
-          <h4 className="font-medium text-black">{name}</h4>
+          <h4 className="font-medium text-black font-bold italic text-xl">{name}</h4>
+          <p className="text-gray-600">Encargado: {userName}</p>
           <p className="text-gray-600">Número de Áreas: {areas.length}</p>
         </div>
         <button className="mt-2 text-blue-600 hover:underline" onClick={handleToggle}>
@@ -73,20 +77,8 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
       </div>
       {expanded && (
         <div className="mt-2 text-gray-700">
-          {areas.length === 0 ? (
-            <p>No hay áreas disponibles.</p>
-          ) : (
-            areas.map((area, areaIndex) => (
-              <div key={areaIndex}>
-                <strong>{area.name}</strong>
-                <ul>
-                  {(Array.isArray(area.tasks) ? area.tasks : []).map((task, taskIndex) => (
-                    <li key={taskIndex}>{task}</li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          )}
+        <p className="text-black font-bold text-xl">Áreas:</p>
+         <AreaInformationCard areas={areas} />
           <div className="mt-4">
             <h5 className="font-semibold">Agregar Área:</h5>
             <input

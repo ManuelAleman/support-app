@@ -7,17 +7,21 @@ const EquipmentSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        Enum : ['Computer', 'Server', 'Printer', 'Projector', 'Scanner', 'UPS', 'Router', 'Switch'],
+        enum: ['Computer', 'Server', 'Printer', 'Projector', 'Scanner', 'UPS', 'Router', 'Switch'],
         required: true
+    },
+    operatingSystem: {
+        type: String
     },
     description: {
         type: String,
         required: true
     },
-    parts: [{
+    area: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Part'
-    }]
+        ref: 'Area',
+        required: true
+    }
 });
 
 const EquipmentModel = mongoose.model('Equipment', EquipmentSchema);
