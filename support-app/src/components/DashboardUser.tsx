@@ -8,6 +8,7 @@ import EquipmentComponent from './dashboardComponents/EquipmentComponent';
 const DashboardUser = ({user, setUser} : any) => {
   const [controller, setController] = useState('incidents');
 
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <HeaderComponent user={user} setUser={setUser} />

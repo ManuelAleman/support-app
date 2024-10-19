@@ -82,7 +82,6 @@ exports.addNewArea = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
     
-
     try {
       const newArea = await areaModel.create({
         name,
