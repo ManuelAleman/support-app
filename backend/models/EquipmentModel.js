@@ -13,15 +13,19 @@ const EquipmentSchema = new mongoose.Schema({
     operatingSystem: {
         type: String
     },
-    description: {
-        type: String,
-        required: true
-    },
     area: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Area',
         required: true
-    }
+    },
+    available: {
+        type: Boolean,
+        default: true
+    },
+    parts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Part'
+    }]
 });
 
 const EquipmentModel = mongoose.model('Equipment', EquipmentSchema);
