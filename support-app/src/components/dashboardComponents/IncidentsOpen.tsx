@@ -7,6 +7,7 @@ const IncidentsOpen = () => {
       <p className="mt-2 text-lg text-gray-700">
         Aún no tiene incidencias.
       </p>
+
     </div>
   );
 };

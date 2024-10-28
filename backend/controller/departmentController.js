@@ -2,6 +2,7 @@ const express = require("express");
 const departmentModel = require("../models/departmentModel");
 const userModel = require("../models/userModel");
 const areaModel = require("../models/areaModel");
+const { model } = require("mongoose");
 exports.createDepartment = async (req, res) => {
     try {
         const { name, inCharge } = req.body;
@@ -27,13 +28,14 @@ exports.createDepartment = async (req, res) => {
            await userModel.findByIdAndUpdate(inCharge, {role: 'inCharge'});
         }
 
-        await departmentModel.create({
+        const dept = await departmentModel.create({
             name,
             inCharge
         });
 
         res.status(201).json({
             status: 'success',
+            dept
         });
 
     }catch(error){
@@ -55,7 +57,21 @@ exports.getMyBuildings = async (req, res) => {
             });
         }
 
-        const departments = await departmentModel.find({ inCharge: user._id }).populate('areas');
+        
+        const departments = await departmentModel
+        .find({ inCharge: user._id })
+        .populate({
+          path: 'areas',
+          populate: {
+            path: 'equipments',
+            model: 'Equipment',
+            populate: {
+              path: 'parts',
+              model: 'Part'
+            }
+          }
+        });
+      
 
         if (!departments) {
             return res.status(404).json({
@@ -101,6 +117,7 @@ exports.addNewArea = async (req, res) => {
       res.status(201).json({
         success: true,
         data: {
+          areaId: newArea._id,  
           area: newArea,
           department,
         },

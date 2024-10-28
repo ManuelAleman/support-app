@@ -9,10 +9,10 @@ const areaSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Equipment'
     }],
-    tasks: {
-        type: Array,
-        default: []
-    },
+    tasks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task'
+    }],
 }, {
     timestamps: true
 });

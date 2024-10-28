@@ -37,8 +37,8 @@ export default function LogIn() {
       }
   
       if (data.token) {
-        Cookies.set('authToken', data.token, { expires: 7 });
-        Cookies.set('userId', data.userId, { expires: 7 });
+        // Establecer el atributo SameSite a 'None'
+        Cookies.set('authToken', data.token, { expires: 7, sameSite: 'None', secure: true });
         router.push('/');
       } else {
         setError('Error desconocido. Inténtalo de nuevo.');

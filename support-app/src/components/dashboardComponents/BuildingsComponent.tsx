@@ -1,22 +1,17 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BuildingCard from "@/components/cards/BuildingsCard";
 import AddBuildingModal from "@/components/modals/NewBuildingModal";
 import ErrorModal from "@/components/modals/ErrorModal";
 import { useUser } from '@/utils/UserContext';
 import { useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
-
-interface BuildingsAreasComponentProps {
-  name: string;
-  equipment: string[];
-  tasks: string[];
-}
+import { BuildingsAreasComponentProps } from "@/utils/types";
 
 interface BuildingsComponentProps {
+  _id: string;
   name: string;
   inCharge: string;
   areas: BuildingsAreasComponentProps[];
-  _id: string;
 }
 
 const BuildingsComponent = () => {
@@ -46,11 +41,12 @@ const BuildingsComponent = () => {
             'Authorization': `Bearer ${token}`,
           }
         });
-        
+
         const data = await response.json();
-        
+
+
         if (data.status === "success") {
-          setBuildings(data.departments);
+          setBuildings(data.departments || []);
         } else {
           console.error(data.message);
         }
@@ -75,9 +71,10 @@ const BuildingsComponent = () => {
       });
   
       const data = await response.json();
-  
       if (data.status === "success") {
-        setBuildings([...buildings, { name, inCharge, areas: [], _id: data.newDepartmentId }]);
+        const newBuilding = data.dept;
+
+        setBuildings((prevBuildings) => [...prevBuildings, newBuilding]);
         setErrorMessage("");
         setIsModalOpen(false);
       } else {
@@ -90,11 +87,15 @@ const BuildingsComponent = () => {
       setIsErrorModalOpen(true);
     }
   };
-  
+
   const handleAddArea = (buildingIndex: number, newArea: BuildingsAreasComponentProps) => {
-    const updatedBuildings = [...buildings];
-    updatedBuildings[buildingIndex].areas.push(newArea);
-    setBuildings(updatedBuildings);
+    setBuildings((prevState) =>
+      prevState.map((building, index) =>
+        index === buildingIndex
+          ? { ...building, areas: [...building.areas, newArea] }
+          : building
+      )
+    );
   };
 
   return (
@@ -109,17 +110,21 @@ const BuildingsComponent = () => {
         </button>
       </div>
       <div className="space-y-4">
-        {buildings.map((building, index) => (
-          <BuildingCard
-            key={building._id}
-            index={index}
-            name={building.name}
-            areas={building.areas}
-            buildingId={building._id}
-            userName={user?.name || ""}
-            onAddArea={handleAddArea}
-          />
-        ))}
+        {buildings.length > 0 ? (
+          buildings.map((building, index) => (
+            <BuildingCard
+              key={building._id}
+              index={index}
+              name={building.name}
+              areas={building.areas}
+              buildingId={building._id}
+              userName={user?.name || ""}
+              onAddArea={handleAddArea} 
+            />
+          ))
+        ) : (
+          <p className="mt-2 text-lg text-gray-700">No hay edificios disponibles.</p>
+        )}
       </div>
       <AddBuildingModal
         isOpen={isModalOpen}

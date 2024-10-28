@@ -14,9 +14,6 @@ const EquipmentPartsSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    description: {
-        type: String
-    }
 });
 
 const PartModel = mongoose.model('Part', EquipmentPartsSchema);

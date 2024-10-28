@@ -17,12 +17,11 @@ const SideNavComponent= ({ setController } : SideNavComponentProps) => {
         {isOpen ? 'Cerrar Menú' : 'Abrir Menú'}
       </button>
 
-      {/* Menú Lateral */}
       <nav className={`absolute md:static bg-white shadow-lg rounded-lg m-4 transition-transform ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <ul className="p-4 space-y-4">
           <li className="flex items-center border-b border-gray-200 pb-2">
             <AiOutlineUser className="text-blue-600 mr-2" />
-            <a href="/profile" className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300">
+            <a href="/ProfilePage" className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300">
               <strong>PERFIL</strong>
             </a>
           </li>

@@ -25,6 +25,7 @@ const DashboardPage = () => {
       user && (
         <div> 
           <DashboardUser user={user} setUser={setUser} /> 
+          {!loading && <Footer />}
         </div>
       )
     )

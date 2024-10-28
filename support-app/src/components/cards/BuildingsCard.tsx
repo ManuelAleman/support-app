@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import AreaInformationCard from "./AreaInformationCard";
-
-interface BuildingsAreasComponentProps {
-  name: string;
-  tasks: string[];
-  equipment: string[];
-}
+import { BuildingsAreasComponentProps } from "@/utils/types";
 
 interface BuildingsComponentProps {
   name: string;
-  userName: string
+  userName: string;
   areas: BuildingsAreasComponentProps[];
   buildingId: string;
   onAddArea: (buildingIndex: number, newArea: BuildingsAreasComponentProps) => void;
@@ -18,7 +13,7 @@ interface BuildingsComponentProps {
 
 const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
   name,
-  areas,
+  areas: initialAreas,
   index,
   buildingId,
   userName,
@@ -26,15 +21,16 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [newAreaName, setNewAreaName] = useState("");
+  const [areas, setAreas] = useState(initialAreas);
 
   const handleToggle = () => {
     setExpanded(!expanded);
   };
-  
 
   const handleAddArea = async () => {
     if (newAreaName) {
-      const token = Cookies.get('authToken'); 
+      const token = Cookies.get('authToken');
+
       try {
         const response = await fetch(`http://localhost:8080/department/${buildingId}/createArea`, {
           method: 'POST',
@@ -45,14 +41,21 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
           body: JSON.stringify({
             name: newAreaName,
             tasks: [],
-            equipment: [],
+            equipments: [],
           }),
         });
-
+  
         const data = await response.json();
-
         if (data.success) {
-          onAddArea(index, data.data.area);
+          const newAreaWithId: BuildingsAreasComponentProps = {
+            _id: data.data.areaId,
+            name: newAreaName,
+            tasks: [],
+            equipments: [],
+          };
+          
+          onAddArea(index, newAreaWithId);
+          setAreas([...areas, newAreaWithId]); 
           setNewAreaName("");
         } else {
           console.error(data.message);
@@ -61,6 +64,10 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
         console.error("Error adding area:", error);
       }
     }
+  };
+
+  const handleUpdateAreas = (updatedAreas: BuildingsAreasComponentProps[]) => {
+    setAreas(updatedAreas);
   };
 
   return (
@@ -77,8 +84,6 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
       </div>
       {expanded && (
         <div className="mt-2 text-gray-700">
-        <p className="text-black font-bold text-xl">Áreas:</p>
-         <AreaInformationCard areas={areas} />
           <div className="mt-4">
             <h5 className="font-semibold">Agregar Área:</h5>
             <input
@@ -90,11 +95,13 @@ const BuildingCard: React.FC<BuildingsComponentProps & { index: number }> = ({
             />
             <button
               onClick={handleAddArea}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4"
             >
               Agregar Área
             </button>
           </div>
+          <p className="text-black font-bold text-xl">Áreas:</p>
+          <AreaInformationCard areas={areas} onUpdateAreas={handleUpdateAreas} />
         </div>
       )}
     </div>
