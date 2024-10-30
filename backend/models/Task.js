@@ -9,20 +9,21 @@ const TaskSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    serviceType: {
+        type: String,
+    },
     priority: {
         type: String,
         Enum: ['low', 'medium', 'high'],
-        required: true
     },
     status: {
         type: String,
         Enum: ['pending', 'inProgress', 'completed'],
-        required: true
+        default: 'pending'
     },
     assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
