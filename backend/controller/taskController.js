@@ -5,9 +5,9 @@ const departmentModel = require('../models/departmentModel');
 
 exports.createTask = async (req, res) => {
     try {
-        const { subject, message, createdBy, assignedEquipment, dueDate } = req.body;
+        const { subject, message, createdBy, assignedEquipment, creationDate } = req.body;
         
-        if (!subject || !message || !createdBy || !assignedEquipment || !dueDate) {
+        if (!subject || !message || !createdBy || !assignedEquipment || !creationDate) {
             return res.status(400).send({ error: 'All fields are required' });
         }
 
@@ -26,7 +26,7 @@ exports.createTask = async (req, res) => {
             message,
             createdBy,
             assignedEquipment,
-            dueDate
+            creationDate
         });
         await task.save();
 
@@ -54,21 +54,21 @@ exports.getAllTasks = async (req, res) => {
 
 exports.authorizeTask = async (req, res) => {
     try {
-        const { taskId, userId, priority } = req.body;
+        const { taskId, assignedTo, priority, service } = req.body;
         const task = await taskModel.findById(taskId);
         if (!task) {
             return res.status(404).send({ error: 'Task not found' });
         }
 
-        const user = await userModel.findById(userId);
+        const user = await userModel.findById(assignedTo);
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
 
         task.status = 'inProgress';
         task.priority = priority;
-
-        task.assignedTo = userId;
+        task.service = service;
+        task.assignedTo = assignedTo;
         await task.save();
 
         res.status(200).send({ message: 'Task assigned successfully', task, assignedUser: user.name });

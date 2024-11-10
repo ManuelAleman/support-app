@@ -35,7 +35,7 @@ const TaskSchema = new mongoose.Schema({
         ref: 'Equipment',
         required: true
     },
-    dueDate: {
+    creationDate: {
         type: Date,
         required: true
     }, 

@@ -57,7 +57,7 @@ const CreateIncidentForm = ({ user }: CreateIncidentFormProps) => {
         message,
         createdBy: userId,
         assignedEquipment: assignedEquipment._id,
-        dueDate: new Date().toISOString(),
+        creationDate: new Date().toISOString(),
       }),
     });
 
@@ -97,7 +97,7 @@ const CreateIncidentForm = ({ user }: CreateIncidentFormProps) => {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-black">Crear Incidencia</h2>
-          <span className="text-gray-600">{getCurrentDate()}</span>
+          <span className="text-gray-600">FECHA: {getCurrentDate()}</span>
         </div>
         {error && <div className="mb-4 text-red-500">{error}</div>}
         {success && <div className="mb-4 text-green-500">{success}</div>}

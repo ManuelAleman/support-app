@@ -21,3 +21,26 @@ export interface BuildingsAreasComponentProps {
   tasks?: string[];
   equipments?: EquipmentProps[];
 }
+
+export interface TaskProps {
+  _id: string;
+  subject: string;
+  message: string;
+  serviceType?: string;
+  priority?: string;
+  status: string;
+  assignedTo?: UserProps;
+  createdBy: UserProps;
+  assignedEquipment: EquipmentProps;
+  creationDate: string;
+  completedAt?: string;
+}
+
+export interface UserProps {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  rating: number;
+  phone: string;
+}

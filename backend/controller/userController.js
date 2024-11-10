@@ -26,3 +26,19 @@ exports.getUserInfoById = async (req, res) => {
         });
     }
 }
+
+exports.getAllInchargeUsers = async (req, res) => {
+    try {
+        const users = await userModel.find({ role: 'inCharge' }).select('-password');
+
+        res.status(200).json({
+            status: 'success',
+            users
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: 'fail',
+            message: error.message
+        });
+    }
+}

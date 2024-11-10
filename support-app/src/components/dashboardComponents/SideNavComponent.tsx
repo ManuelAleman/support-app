@@ -38,7 +38,12 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
               <p className="font-black">GENERAR INCIDENCIA</p>
             </a>
           </li>
-          {user.role === "inCharge" && (
+            {(user.role === "inCharge" || user.role === "admin") && (
+              <>
+                <div className="border-t border-gray-300 my-4"></div>
+              <p className="text-gray-500 text-sm font-semibold uppercase mb-2 pl-2 tracking-wide">ENCARGADO AREA</p>
+
+    
             <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
               <AiOutlineHome className="text-blue-600 mr-2" />
               <a 
@@ -48,6 +53,7 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
                 <p className="font-black">MIS EDIFICIOS</p>
               </a>
             </li>
+            </>
           )}
           <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
             <AiOutlineDesktop className="text-blue-600 mr-2" />
@@ -63,8 +69,6 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
             <>
 
               <div className="border-t border-gray-300 my-4"></div>
-
-
               <p className="text-gray-500 text-sm font-semibold uppercase mb-2 pl-2 tracking-wide">Opciones de Administrador</p>
 
               <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
@@ -74,6 +78,15 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
                   onClick={() => { setController('userManagement'); setIsOpen(false); }}
                 >
                   <p className="font-black">Gestión de Usuarios</p>
+                </a>
+              </li>
+              <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
+                <AiOutlineFileText className="text-blue-600 mr-2" />
+                <a 
+                  className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
+                  onClick={() => { setController('incidentManager'); setIsOpen(false); }}
+                >
+                  <p className="font-black">Gestion de incidencias</p>
                 </a>
               </li>
               <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">

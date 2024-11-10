@@ -23,8 +23,7 @@ exports.createDepartment = async (req, res) => {
                 message: 'User not found'
             });
         }
-
-        if(inCharge.role !== 'inCharge'){
+        if(existingUser.role !== 'inCharge' && existingUser.role !== 'admin'){
            await userModel.findByIdAndUpdate(inCharge, {role: 'inCharge'});
         }
 
