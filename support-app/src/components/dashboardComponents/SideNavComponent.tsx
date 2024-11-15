@@ -65,6 +65,32 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
             </a>
           </li>
 
+          {user.role === "supporter" &&(
+            <>
+              <div className="border-t border-gray-300 my-4"></div>
+              <p className="text-gray-500 text-sm font-semibold uppercase mb-2 pl-2 tracking-wide">SOPORTE TÉCNICO</p>
+              <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
+                <AiOutlineFileText className="text-blue-600 mr-2" />
+                <a 
+                  className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
+                  onClick={() => { setController('myIncidents'); setIsOpen(false); }}
+                >
+                  <p className="font-black">MIS INCIDENCIAS ASIGNADAS</p>
+                </a>
+              </li>
+
+              <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
+                <AiOutlineFileText className="text-blue-600 mr-2" />
+                <a 
+                  className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
+                  onClick={() => { setController('incidentHistory'); setIsOpen(false); }}
+                >
+                  <p className="font-black">HISTORIAL DE INCIDENCIAS</p>
+                </a>
+              </li>
+            </>
+          ) }
+
           {user.role === "admin" && (
             <>
 

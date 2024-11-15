@@ -7,6 +7,8 @@ import BuildingsComponent from './dashboardComponents/BuildingsComponent';
 import EquipmentComponent from './dashboardComponents/EquipmentComponent';
 import UserMagementComponent from './dashboardComponents/UserManagementComponent';
 import IncidentManagerComponent from './dashboardComponents/IncidentManagerComponent';
+import SupportIncidentsComponent from './dashboardComponents/SupportIncidentsComponent';
+import IncidentHistoryComponent from './dashboardComponents/IncidentHistoryComponent';
 const DashboardUser = ({user, setUser} : any) => {
   const [controller, setController] = useState('incidents');
 
@@ -21,6 +23,8 @@ const DashboardUser = ({user, setUser} : any) => {
           {controller === 'equipment' && <EquipmentComponent />}
           {controller === 'userManagement' && <UserMagementComponent />}
           {controller === 'incidentManager' && <IncidentManagerComponent />}
+          {controller === 'myIncidents' && < SupportIncidentsComponent/>}
+          {controller === 'incidentHistory' && <IncidentHistoryComponent />}
         </main>
       </div>
     </div>

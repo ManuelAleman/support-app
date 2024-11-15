@@ -29,7 +29,7 @@ exports.getUserInfoById = async (req, res) => {
 
 exports.getAllInchargeUsers = async (req, res) => {
     try {
-        const users = await userModel.find({ role: 'inCharge' }).select('-password');
+        const users = await userModel.find({ role: 'supporter' }).select('-password');
 
         res.status(200).json({
             status: 'success',

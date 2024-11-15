@@ -34,6 +34,7 @@ export interface TaskProps {
   assignedEquipment: EquipmentProps;
   creationDate: string;
   completedAt?: string;
+  changes?: ChangeProps[];
 }
 
 export interface UserProps {
@@ -43,4 +44,13 @@ export interface UserProps {
   role: string;
   rating: number;
   phone: string;
+}
+
+export interface ChangeProps {
+  _id : string;
+  piece: PartProps;
+  message: string;
+  price: number;
+  status: string;
+  incident: TaskProps;
 }

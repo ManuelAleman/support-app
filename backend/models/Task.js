@@ -41,7 +41,11 @@ const TaskSchema = new mongoose.Schema({
     }, 
     completedAt: {
         type: Date
-    }
+    },
+    changes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ChangesGestor'
+    }]
 }, {
     timestamps: true
 

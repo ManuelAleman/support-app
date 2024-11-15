@@ -21,6 +21,11 @@ exports.createTask = async (req, res) => {
             return res.status(404).send({ error: 'Equipment not found' });
         }
 
+        const existingTask = await taskModel.findOne({ assignedEquipment, status: { $ne: 'completed' } });
+        if (existingTask) {
+            return res.status(400).send({ error: 'A task with the same equipment already exists' });
+        }
+
         const task = new taskModel({
             subject,
             message,
@@ -41,7 +46,6 @@ exports.createTask = async (req, res) => {
         res.status(500).send({ error: 'An error occurred while creating the task' });
     }
 };
-
 exports.getAllTasks = async (req, res) => {
     try {
         const tasks = await taskModel.find().populate('createdBy', 'name').populate('assignedEquipment', 'name').populate('assignedTo', 'name');
@@ -100,13 +104,44 @@ exports.getMyGeneratedTasks = async (req, res) => {
 
 exports.getMyAssignedTasks = async (req, res) => {
     try {
-        const tasks = await taskModel.find({ assignedTo: req.user._id }).populate('createdBy', 'name').populate('assignedEquipment', 'name').populate('assignedTo', 'name');
+        const tasks = await taskModel.find({ assignedTo: req.body.id, status: { $ne: 'completed' } })
+            .populate({
+                path: 'createdBy',
+                select: 'name email role rating phone',
+            })
+            .populate({
+                path: 'assignedEquipment',
+                select: 'name type operatingSystem available',
+                populate: {
+                    path: 'parts',
+                    select: 'type model quantity',
+                }
+            })
+            .populate({
+                path: 'assignedTo',
+                select: 'name email role rating phone',
+            })
+            .populate({
+                path: 'changes',
+                select: 'message price status',
+                populate: {
+                    path: 'piece',
+                    select: 'name type model'
+                }
+            });
+        
+        tasks.sort((a, b) => {
+            const priorityOrder = { low: 3, medium: 2, high: 1 };
+            return priorityOrder[a.priority] - priorityOrder[b.priority];
+        });
+
         res.status(200).send(tasks);
     } catch (error) {
         console.error(error);
         res.status(500).send({ error: 'An error occurred while fetching tasks' });
     }
-}
+};
+
 
 exports.getAllBuildingAndEquipmentInfo = async (req, res) => {
     try {
@@ -124,7 +159,7 @@ exports.getAllBuildingAndEquipmentInfo = async (req, res) => {
             _id: department._id,
             name: department.name,
             inCharge: department.inCharge,
-            equipments: department.areas.flatMap(area => area.equipments) // Aplanamos los equipos de todas las áreas
+            equipments: department.areas.flatMap(area => area.equipments)
         }));
 
         res.status(200).send(result);
@@ -134,3 +169,64 @@ exports.getAllBuildingAndEquipmentInfo = async (req, res) => {
     }
 };
 
+
+exports.finishTask = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const completedAt = new Date();
+        const task = await taskModel.findById(id);
+        if (!task) {
+            return res.status(404).send({ error: 'Task not found' });
+        }
+
+        task.status = 'completed';
+        task.completedAt = completedAt;
+        await task.save();
+
+        res.status(200).send({ message: 'Task finished successfully', task });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: 'An error occurred while finishing task' });
+    }
+}
+
+exports.getMyCompletedTasks = async (req, res) => {
+    try {
+        const tasks = await taskModel.find({ assignedTo: req.body.id, status: 'completed' })
+        .populate({
+            path: 'createdBy',
+            select: 'name email role rating phone',
+        })
+        .populate({
+            path: 'assignedEquipment',
+            select: 'name type operatingSystem available',
+            populate: {
+                path: 'parts',
+                select: 'type model quantity',
+            }
+        })
+        .populate({
+            path: 'assignedTo',
+            select: 'name email role rating phone',
+        })
+        .populate({
+            path: 'changes',
+            select: 'message price status',
+            populate: {
+                path: 'piece',
+                select: 'name type model'
+            }
+        });
+    
+    tasks.sort((a, b) => {
+        const priorityOrder = { low: 3, medium: 2, high: 1 };
+        return priorityOrder[a.priority] - priorityOrder[b.priority];
+    });
+
+    res.status(200).send(tasks);
+} catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'An error occurred while fetching tasks' });
+}
+};
