@@ -31,9 +31,33 @@ exports.create = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   try {
-    const changes = await ChangesGestorModel.find().populate("piece incident");
+    const changes = await ChangesGestorModel.find({
+      status: { $nin: ["rejected", "completed"] }
+    }).populate("piece incident");
     res.status(200).json(changes);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.acceptChange = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const change = await ChangesGestorModel.findById(id);
+    if (!change) {
+      return res.status(404).json({ message: "Change not found" });
+    }
+    if (change.status !== "pending") {
+      return res.status(400).json({ message: "Change already administrade" });
+    }
+
+    const status = req.body.status;
+    change.status = status;
+
+    await change.save();
+    res.status(200).json({ message: "Change accepted successfully", change });
+  }
+  catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

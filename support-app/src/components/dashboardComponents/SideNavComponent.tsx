@@ -25,8 +25,11 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
         <ul className="p-4 space-y-4">
           <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
             <AiOutlineUser className="text-blue-600 mr-2" />
-            <a href="/ProfilePage" className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300">
-              <p className="font-black">PERFIL</p>
+            <a 
+              className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
+              onClick={() => { setController('profile'); setIsOpen(false); }}
+            >
+              <p className="font-black">MI PERFIL</p>
             </a>
           </li>
           <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
@@ -36,6 +39,15 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
               onClick={() => { setController('incidents'); setIsOpen(false); }}
             >
               <p className="font-black">GENERAR INCIDENCIA</p>
+            </a>
+          </li>
+          <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
+            <AiOutlineFileText className="text-blue-600 mr-2" />
+            <a 
+              className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
+              onClick={() => { setController('myGeneratedIncidents'); setIsOpen(false); }}
+            >
+              <p className="font-black">INCIDENCIAS GENERADAS</p>
             </a>
           </li>
             {(user.role === "inCharge" || user.role === "admin") && (
@@ -55,15 +67,7 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
             </li>
             </>
           )}
-          <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
-            <AiOutlineDesktop className="text-blue-600 mr-2" />
-            <a 
-              className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
-              onClick={() => { setController('equipment'); setIsOpen(false); }}
-            >
-              <p className="font-black">EQUIPAMIENTO</p>
-            </a>
-          </li>
+         
 
           {user.role === "supporter" &&(
             <>
@@ -119,9 +123,9 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
                 <AiOutlineBarChart className="text-blue-600 mr-2" />
                 <a 
                   className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
-                  onClick={() => { setController('reports'); setIsOpen(false); }}
+                  onClick={() => { setController('changesGestor'); setIsOpen(false); }}
                 >
-                  <p className="font-black">Reportes Generales</p>
+                  <p className="font-black">Gesion de cambios</p>
                 </a>
               </li>
               <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">

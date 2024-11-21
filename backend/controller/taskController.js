@@ -94,7 +94,30 @@ exports.getUnassignedTasks = async (req, res) => {
 
 exports.getMyGeneratedTasks = async (req, res) => {
     try {
-        const tasks = await taskModel.find({ createdBy: req.user._id }).populate('createdBy', 'name').populate('assignedEquipment', 'name').populate('assignedTo', 'name');
+        const tasks = await taskModel.find({ createdBy: req.body.id }).populate({
+            path: 'createdBy',
+            select: 'name email role rating phone',
+        })
+        .populate({
+            path: 'assignedEquipment',
+            select: 'name type operatingSystem available',
+            populate: {
+                path: 'parts',
+                select: 'type model quantity',
+            }
+        })
+        .populate({
+            path: 'assignedTo',
+            select: 'name email role rating phone',
+        })
+        .populate({
+            path: 'changes',
+            select: 'message price status',
+            populate: {
+                path: 'piece',
+                select: 'name type model'
+            }
+        });
         res.status(200).send(tasks);
     } catch (error) {
         console.error(error);

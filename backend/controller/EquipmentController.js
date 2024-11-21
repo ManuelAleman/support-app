@@ -3,7 +3,6 @@ const areaModel = require('../models/areaModel');
 const PartModel = require('../models/EquipmentPartsModel');
 exports.createEquipment = async (req, res) => {
     try {
-        console.log("Request Body:", req.body);
         const { name, type, operatingSystem, areaId, parts, available } = req.body;
 
         if (!name || !type || !areaId) {

@@ -1,27 +1,23 @@
+//profe
 {
-    "email": "ana.torres@example.com",
-    "password": "ContraseñaSegura123"
+    "email": "marco.ra@culiacan.tecnm.mx",
+    "password": "1234"
 }
 
+//cesar
 {
-    "email": "carlos.gomez@example.com",
-    "password": "ContraseñaAdmin456"
+    "email" : "l21170502@culiacan.tecnm.mx",
+    "password" : "1234"
 }
 
+//manuel
 {
-    "email": "usuario.inexistente@example.com",
-    "password": "CualquierContraseña"
+    "email" : "l21170263@culiacan.tecnm.mx",
+    "password" : "1234"
 }
 
+/juan
 {
-    "email": "laura.martinez@example.com",
-    "password": "ContraseñaIncorrecta"
-}
-
-{
-    "password": "ContraseñaSegura123"
-}
-
-{
-    "email": "ana.torres@example.com"
+    "email" : "l21170309@culiacan.tecnm.mx"
+    "password" : "1234"
 }

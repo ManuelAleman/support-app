@@ -37,7 +37,6 @@ export default function LogIn() {
       }
   
       if (data.token) {
-        // Establecer el atributo SameSite a 'None'
         Cookies.set('authToken', data.token, { expires: 7, sameSite: 'None', secure: true });
         router.push('/');
       } else {

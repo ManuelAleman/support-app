@@ -54,3 +54,12 @@ export interface ChangeProps {
   status: string;
   incident: TaskProps;
 }
+
+export interface ChangesProps {
+  _id : string;
+  piece: PartProps;
+  message: string;
+  price: number;
+  status: string;
+  incident?: TaskProps;
+}
