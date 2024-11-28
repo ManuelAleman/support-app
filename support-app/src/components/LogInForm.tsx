@@ -37,6 +37,7 @@ export default function LogIn() {
       }
   
       if (data.token) {
+        console.log('Token:', data.token);
         Cookies.set('authToken', data.token, { expires: 7, sameSite: 'None', secure: true });
         router.push('/');
       } else {

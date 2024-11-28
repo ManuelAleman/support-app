@@ -14,7 +14,7 @@ const supportSchema = new mongoose.Schema({
     }, 
     speciality: {
         type: String,
-        Enum : ['Hardware', 'Software', 'Network'],
+        enum : ['Hardware', 'Software', 'Network'],
         required: [true, 'Please provide your speciality']
     },
 

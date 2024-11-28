@@ -92,6 +92,18 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
                   <p className="font-black">HISTORIAL DE INCIDENCIAS</p>
                 </a>
               </li>
+
+
+              <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
+                <AiOutlineFileText className="text-blue-600 mr-2" />
+                <a 
+                  className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
+                  onClick={() => { setController('myProblemsAssigned'); setIsOpen(false); }}
+                >
+                  <p className="font-black">MIS PROBLEMAS ASIGNADOS</p>
+                </a>
+              </li>
+              
             </>
           ) }
 
@@ -126,6 +138,15 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
                   onClick={() => { setController('changesGestor'); setIsOpen(false); }}
                 >
                   <p className="font-black">Gesion de cambios</p>
+                </a>
+              </li>
+              <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
+                <AiOutlineBarChart className="text-blue-600 mr-2" />
+                <a 
+                  className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
+                  onClick={() => { setController('problemGestor'); setIsOpen(false); }}
+                >
+                  <p className="font-black">Gestion de problemas</p>
                 </a>
               </li>
               <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">

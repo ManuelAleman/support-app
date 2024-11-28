@@ -2,15 +2,20 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { UserProps } from '@/utils/types';
 import ConfirmModal from '@/components/modals/ConfirmModal';
+import SpecialtyModal from '@/components/modals/SpecialityModal';
+
 const UserManagementComponent = () => {
   const [users, setUsers] = useState<UserProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Estado para manejar el modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [pendingAction, setPendingAction] = useState<() => void>(() => {});
+
+  const [isSpecialtyModalOpen, setIsSpecialtyModalOpen] = useState(false);
+  const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
+  const [userToUpdate, setUserToUpdate] = useState<string | null>(null);
 
   useEffect(() => {
     const token = Cookies.get('authToken');
@@ -45,44 +50,71 @@ const UserManagementComponent = () => {
   }, []);
 
   const handleRoleChange = (userId: string, newRole: string) => {
-    // Configura el mensaje del modal y la acción pendiente
-    setModalMessage(`¿Estás seguro de cambiar el rol del usuario a "${newRole === "user" ? "usuario" : newRole === "supporter" ? "soporte" : newRole === "admin" ? "administrador" : "encargado"}"?`);
-    setPendingAction(() => () => {
-      const token = Cookies.get('authToken');
-      if (token) {
-        fetch(`http://localhost:8080/user/updateRolUser/${userId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ role: newRole }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Failed to update role');
-            }
-            setUsers((prevUsers) =>
-              prevUsers.map((user) =>
-                user._id === userId ? { ...user, role: newRole } : user
-              )
-            );
-          })
-          .catch((error) => console.error('Error updating role:', error));
-      } else {
-        console.error('Authentication token not found');
-      }
-    });
-    setIsModalOpen(true); 
+    if (newRole === 'supporter') {
+      setUserToUpdate(userId);
+      setModalMessage(
+        `¿Estás seguro de cambiar el rol del usuario a "soporte"? Por favor selecciona su especialidad.`
+      );
+      setIsSpecialtyModalOpen(true);
+    } else {
+      // Si no es supporter, simplemente cambia el rol
+      setPendingAction(() => {
+        return () => updateRole(userId, newRole);
+      });
+      setIsConfirmModalOpen(true);
+    }
+  };
+
+  const handleSpecialtyConfirm = (specialty: string) => {
+    if (userToUpdate) {
+      // Actualizar el rol y la especialidad en el backend
+      updateRole(userToUpdate, 'supporter', specialty);
+      setIsSpecialtyModalOpen(false);
+    }
   };
 
   const handleConfirm = () => {
-    pendingAction();
-    setIsModalOpen(false); 
+    if (pendingAction) {
+      pendingAction();
+      setIsConfirmModalOpen(false);
+    }
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false); 
+    setIsConfirmModalOpen(false);
+    setIsSpecialtyModalOpen(false);
+    setUserToUpdate(null);
+    setSelectedSpecialty(null);
+  };
+
+  const updateRole = (userId: string, newRole: string, specialty?: string) => {
+    const token = Cookies.get('authToken');
+    if (token) {
+      fetch(`http://localhost:8080/user/updateRolUser/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          role: newRole,
+          specialty: specialty,
+        }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to update role');
+          }
+          setUsers((prevUsers) =>
+            prevUsers.map((user) =>
+              user._id === userId ? { ...user, role: newRole } : user
+            )
+          );
+        })
+        .catch((error) => console.error('Error updating role:', error));
+    } else {
+      console.error('Authentication token not found');
+    }
   };
 
   return (
@@ -127,10 +159,18 @@ const UserManagementComponent = () => {
 
       {/* Modal de confirmación */}
       <ConfirmModal
-        isOpen={isModalOpen}
+        isOpen={isConfirmModalOpen}
         message={modalMessage}
         onConfirm={handleConfirm}
         onCancel={handleCancel}
+      />
+
+      {/* Modal de especialidad */}
+      <SpecialtyModal
+        isOpen={isSpecialtyModalOpen}
+        onConfirm={handleSpecialtyConfirm}
+        onCancel={handleCancel}
+        message="Seleccione la especialidad para el rol de soporte"
       />
     </div>
   );

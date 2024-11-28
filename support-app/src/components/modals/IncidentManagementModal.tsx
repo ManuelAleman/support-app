@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TaskProps, UserProps } from "@/utils/types";
+import { TaskProps, UserProps, SupporterProps } from "@/utils/types";
 import Cookies from "js-cookie";
 
 interface IncidentManagementModalProps {
@@ -18,20 +18,33 @@ const IncidentManagementModal = ({
   onUpdatedTask,
 }: IncidentManagementModalProps) => {
   const [priority, setPriority] = useState("low");
-  const [assignedTo, setAssignedTo] = useState(user?.[0]._id);
-  const [service, setService] = useState("Maintenance - 4h");
+  const [assignedTo, setAssignedTo] = useState("");
+  const [type, setType] = useState("Hardware");
+
+  const filteredUsers = user?.filter((u) => u.speciality === type) || [];
+
+
+  useEffect(() => {
+    if (filteredUsers.length > 0) {
+      setAssignedTo(filteredUsers[0]._id);
+    } else {
+      setAssignedTo("");
+    }
+  }, [filteredUsers]);
 
   if (!isOpen) return null;
 
   const handleSave = async () => {
-    const isConfirmed = window.confirm("¿Estás seguro de que deseas guardar los cambios?");
+    const isConfirmed = window.confirm(
+      "¿Estás seguro de que deseas guardar los cambios?"
+    );
     const authToken = Cookies.get("authToken");
     if (isConfirmed) {
       const updatedTask = {
-        taskId : task._id,
+        taskId: task._id,
         priority,
         assignedTo,
-        service,
+        type,
       };
 
       console.log("Guardando cambios:", updatedTask);
@@ -41,15 +54,15 @@ const IncidentManagementModal = ({
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${authToken}`,
+            Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify(updatedTask),
         });
-  
+
         if (!response.ok) {
           throw new Error("Error al guardar los cambios");
         }
-  
+
         console.log("Cambios guardados correctamente:", updatedTask);
         onUpdatedTask(task._id);
         onClose();
@@ -59,6 +72,7 @@ const IncidentManagementModal = ({
       }
     }
   };
+
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
       <div className="bg-gray-800 rounded-lg shadow-2xl p-6 w-[32rem] max-h-[80vh] overflow-auto border border-gray-700">
@@ -72,43 +86,32 @@ const IncidentManagementModal = ({
         <p className="text-gray-300 mb-2">
           Mensaje: <span className="text-gray-100">{task.message}</span>
         </p>
-
         <div className="mb-4">
-          <label className="text-gray-400">Servicio:</label>
+          <label className="text-gray-400">Tipo:</label>
           <select
             className="block w-full mt-1 border border-gray-600 rounded bg-gray-700 text-gray-200 px-4 py-2 transition duration-200 ease-in-out shadow-inner focus:outline-none focus:ring-2 focus:ring-red-600 hover:bg-gray-600"
-            value={service}
-            onChange={(e) => setService(e.target.value)}
+            value={type}
+            onChange={(e) => setType(e.target.value)}
           >
-            <option value="Maintenance - 4h">Mantenimiento (4hrs)</option>
-            <option value="Support - 2h">Soporte (2hrs)</option>
-            <option value="Installation - 1h-5h">Instalación (1-5hrs)</option>
-            <option value="Consulting - 1h-8h">Consultoría (1-8hrs)</option>
-            <option value="Hardware Repair - 3h-6h">Reparación de Hardware (3-6hrs)</option>
-            <option value="Software Update - 1h-3h">Actualización de Software (1-3hrs)</option>
-            <option value="Quick Training - 1h-2h">Capacitación Rápida (1-2hrs)</option>
-            <option value="Data Migration - 4h-12h">Migración de Datos (4-12hrs)</option>
-            <option value="Preventive Maintenance - 2h-4h">Mantenimiento Preventivo (2-4hrs)</option>
-            <option value="Remote Support - 30min-2h">Soporte Remoto (30min-2hrs)</option>
-            <option value="Security Assessment - 2h-5h">Evaluación de Seguridad (2-5hrs)</option>
-            <option value="Technical Cleaning - 1h-3h">Limpieza Técnica de Equipos (1-3hrs)</option>
-            <option value="Network Installation - 5h-8h">Instalación de Redes (5-8hrs)</option>
-            <option value="IT Audit - 3h-6h">Auditoría de TI (3-6hrs)</option>
+            <option value="Hardware">Hardware</option>
+            <option value="Software">Software</option>
+            <option value="Network">Redes</option>
           </select>
         </div>
 
         <div className="mb-4">
-          <label className="text-gray-400">Prioridad:</label>
-          <select
-            className="block w-full mt-1 border border-gray-600 rounded bg-gray-700 text-gray-200 px-4 py-2 transition duration-200 ease-in-out shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500 hover:bg-gray-600"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-          >
-            <option value="low">Baja</option>
-            <option value="medium">Media</option>
-            <option value="high">Alta</option>
-          </select>
-        </div>
+  <label className="text-gray-400">Prioridad:</label>
+  <select
+    className="block w-full mt-1 border border-gray-600 rounded bg-gray-700 text-gray-200 px-4 py-2 transition duration-200 ease-in-out shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500 hover:bg-gray-600"
+    value={priority}
+    onChange={(e) => setPriority(e.target.value)}
+  >
+    <option value="low">Baja</option>
+    <option value="medium">Media</option>
+    <option value="high">Alta</option>
+  </select>
+</div>
+
 
         <div className="mb-4">
           <label className="text-gray-400">Asignado a:</label>
@@ -117,17 +120,17 @@ const IncidentManagementModal = ({
             value={assignedTo}
             onChange={(e) => setAssignedTo(e.target.value)}
           >
-            {user?.map((u) => (
-              <option key={u._id} value={u._id}>
-                {u.name}
-              </option>
-            ))}
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((u) => (
+                <option key={u._id} value={u._id}>
+                  {u.name}
+                </option>
+              ))
+            ) : (
+              <option value="">No hay usuarios disponibles</option>
+            )}
           </select>
         </div>
-
-        <p className="text-gray-300 mb-2">
-          Solicitud creada por: <span className="text-gray-100">{task.createdBy.name}</span>
-        </p>
 
         <div className="flex justify-end mt-6">
           <button

@@ -45,7 +45,11 @@ const TaskSchema = new mongoose.Schema({
     changes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ChangesGestor'
-    }]
+    }],
+    type: {
+        type: String,
+        Enum: ['hardware', 'software', 'network'],
+    }
 }, {
     timestamps: true
 

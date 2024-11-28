@@ -33,7 +33,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         const fetchUser = async () => {
             const token = Cookies.get('authToken');
             console.log("Token:", token);
-            
             if (token) {
                 try {
                     const response = await axios.get(URL_API + "/user/getMyUser", {

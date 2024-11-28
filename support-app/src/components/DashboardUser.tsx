@@ -11,6 +11,8 @@ import SupportIncidentsComponent from './dashboardComponents/SupportIncidentsCom
 import IncidentHistoryComponent from './dashboardComponents/IncidentHistoryComponent';
 import AdminChangesGestor from './dashboardComponents/AdminChangesGestor';
 import MyProfile from './dashboardComponents/MyProfile';
+import ProblemGestor from './dashboardComponents/ProblemGestor';
+import MyProblemsAssigned from './dashboardComponents/MyProblemsAssigned';
 const DashboardUser = ({user, setUser} : any) => {
   const [controller, setController] = useState('incidents');
 
@@ -29,6 +31,8 @@ const DashboardUser = ({user, setUser} : any) => {
           {controller === 'myIncidents' && < SupportIncidentsComponent/>}
           {controller === 'incidentHistory' && <IncidentHistoryComponent />}
           {controller === 'changesGestor' && <AdminChangesGestor />}
+          {controller === 'problemGestor' && <ProblemGestor />}
+          {controller === 'myProblemsAssigned' && <MyProblemsAssigned />}
         </main>
       </div>
     </div>

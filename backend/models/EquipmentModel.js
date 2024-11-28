@@ -28,6 +28,6 @@ const EquipmentSchema = new mongoose.Schema({
     }]
 });
 
-const EquipmentModel = mongoose.model('Equipment', EquipmentSchema);
+const EquipmentModel = mongoose.models.Equipment ||mongoose.model('Equipment', EquipmentSchema);
 
 module.exports = EquipmentModel;

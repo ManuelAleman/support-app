@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TaskProps, UserProps } from '@/utils/types';
+import { TaskProps, UserProps, SupporterProps } from '@/utils/types';
 import IncidentCard from '../cards/IncidentCard';
 import Cookies from 'js-cookie';
 
@@ -31,7 +31,7 @@ const IncidentManagerComponent = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:8080/user/getAllInchargeUsers", {
+        const response = await fetch("http://localhost:8080/user/getAllTechnicians", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

@@ -34,6 +34,7 @@ export interface TaskProps {
   assignedEquipment: EquipmentProps;
   creationDate: string;
   completedAt?: string;
+  type?: string;
   changes?: ChangeProps[];
 }
 
@@ -44,6 +45,7 @@ export interface UserProps {
   role: string;
   rating: number;
   phone: string;
+  speciality?: string;
 }
 
 export interface ChangeProps {
@@ -62,4 +64,23 @@ export interface ChangesProps {
   price: number;
   status: string;
   incident?: TaskProps;
+}
+
+export interface SupporterProps {
+  _id : string,
+  user : UserProps,
+  rating : number,
+  speciality : string,
+}
+
+export interface ProblemProps {
+  _id : string,
+  equipment : EquipmentProps,
+  assignedTo : UserProps,
+  rootCause ?: string,
+  knownError ?: string,
+  solution ?: string,
+  startDate : string,
+  solutionDate ?: string,
+  status : string,
 }

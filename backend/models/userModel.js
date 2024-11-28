@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'admin', 'supporter', 'inCharge'],
         default: 'user'
     },
+    speciality: {
+        type: String,
+        emun: ['none', 'hardware', 'software', 'network'],
+        default: 'none'
+    },
 
 }, {
     timestamps: true

@@ -22,6 +22,7 @@ app.use("/department", require("./routes/departmentRoute"));
 app.use("/equipment", require("./routes/equipmentRoute"));
 app.use("/task", require("./routes/taskRoute"));
 app.use("/change", require("./routes/changeRoute"));
+app.use("/problem", require("./routes/problemRoute"));
 
 
 const PORT = process.env.PORT || 3000;
