@@ -3,12 +3,17 @@ import { TaskProps } from "@/utils/types";
 import Cookies from "js-cookie";
 import ChangeModal from "@/components/modals/ChangeGestorModal";
 import ConfirmModal from "../modals/ConfirmModal";
+import ServiceSelectionModal from "../modals/ServiceSelectionModal";
 
 const SupportIncidentsComponent = () => {
   const [tasks, setTasks] = useState<TaskProps[]>([]);
   const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null);
+  const [selectedTask2 , setSelectedTask2] = useState<TaskProps | null>(null);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
   const [loadingData, setLoadingData] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isServiceSelectionModalOpen, setIsServiceSelectionModalOpen] =
+    useState(false);
   const [taskToComplete, setTaskToComplete] = useState<string | null>(null);
   useEffect(() => {
     const token = Cookies.get("authToken");
@@ -35,6 +40,38 @@ const SupportIncidentsComponent = () => {
 
     fetchTasks();
   }, []);
+
+  const handleServiceSelect = async (taskId: string, service: string) => {
+    try {
+      const response = await fetch(`http://localhost:8080/task/setServiceType/${taskId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("authToken")}`, 
+        },
+        body: JSON.stringify({ serviceType: service }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error updating service type:", errorData.error);
+        return;
+      }
+  
+      const { task: updatedTask } = await response.json();
+  
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task._id === taskId ? { ...task, serviceType: updatedTask.serviceType } : task
+        )
+      );
+  
+      console.log("Service type updated successfully:", updatedTask);
+    } catch (error) {
+      console.error("An error occurred while updating service type:", error);
+    }
+  };
+  
 
   const handleGenerateChange = async (
     taskId: string,
@@ -64,6 +101,7 @@ const SupportIncidentsComponent = () => {
       if (response.ok) {
         alert("Cambio generado con éxito.");
         setSelectedTask(null);
+        setSelectedTask2(null);
 
         setTasks((prevTasks) =>
           prevTasks.map((task) =>
@@ -86,7 +124,7 @@ const SupportIncidentsComponent = () => {
   };
 
   const handleConfirmCompleteTask = async () => {
-    if (!taskToComplete) return;  
+    if (!taskToComplete) return;
     try {
       const token = Cookies.get("authToken");
       const response = await fetch(
@@ -118,6 +156,7 @@ const SupportIncidentsComponent = () => {
 
   const canCompleteTask = (task: TaskProps) => {
     return (
+      task.serviceType &&
       task.changes &&
       task.changes.every(
         (change) =>
@@ -184,6 +223,13 @@ const SupportIncidentsComponent = () => {
                         ? "Completado"
                         : task.status}
                     </p>
+                    <p className="text-gray-700 mt-3 p-3 border-l-4 border-blue-500 bg-gray-50 rounded-lg">
+  <span className="font-semibold text-blue-600">Servicio Seleccionado:</span>{" "}
+  <br />
+  <span className={`text-sm ${task.serviceType ? 'text-green-600' : 'text-red-600'}`}>
+    {task.serviceType || "No seleccionado"}
+  </span>
+</p>
 
                     <div className="mt-4">
                       <p className="text-xs font-semibold text-gray-800">
@@ -226,8 +272,17 @@ const SupportIncidentsComponent = () => {
 
                   <div>
                     <button
+                      onClick={() => {
+                        setSelectedTask2(task);
+                        setIsServiceSelectionModalOpen(!isServiceSelectionModalOpen);
+                      }}
+                      className="w-full px-4 py-2 mt-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+                    >
+                      Seleccionar servicio
+                    </button>
+                    <button
                       onClick={() => setSelectedTask(task)}
-                      className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-4"
+                      className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2"
                     >
                       Solicitar cambios
                     </button>
@@ -247,7 +302,7 @@ const SupportIncidentsComponent = () => {
                     >
                       {canCompleteTask(task)
                         ? "Marcar como Completado"
-                        : "Esperando cambios pendientes"}
+                        : "Esperando actualizaciones"}
                     </button>
                   </div>
                 </div>
@@ -262,6 +317,20 @@ const SupportIncidentsComponent = () => {
           task={selectedTask}
           onClose={() => setSelectedTask(null)}
           onGenerateChange={handleGenerateChange}
+        />
+      )}
+
+      {isServiceSelectionModalOpen && (
+        <ServiceSelectionModal
+          isOpen={isServiceSelectionModalOpen}
+          onClose={() => setIsServiceSelectionModalOpen(false)}
+          onSelect={(service) => {
+            if (selectedTask2) {
+              handleServiceSelect(selectedTask2._id, service);
+              setSelectedService(service);
+            }
+            setIsServiceSelectionModalOpen(false);
+          }}
         />
       )}
 

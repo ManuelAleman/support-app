@@ -22,7 +22,7 @@ const DashboardUser = ({user, setUser} : any) => {
       <div className="flex flex-1 flex-col md:flex-row">
         <SideNavComponent setController={setController} user={user} />
         <main className="flex-1 p-4 md:p-8">
-          {controller === 'profile' && <MyProfile />}
+          {controller === 'profile' && <MyProfile user={user} />}
           {controller === 'incidents' && <IncidentsOpen user={user} />}
           {controller === 'myGeneratedIncidents' && <MyIncidentsGenerated />}
           {controller === 'buildings' && <BuildingsComponent />}

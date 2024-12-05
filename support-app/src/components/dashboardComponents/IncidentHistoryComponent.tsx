@@ -7,7 +7,6 @@ const IncidentHistoryComponent = () => {
   const [myCompletedTasks, setMyCompletedTasks] = useState<TaskProps[]>([]);
 
   useEffect(() => {
-    const token = Cookies.get("authToken");
     const fetchMyCompletedTasks = async () => {
       try {
         const response = await fetch(
@@ -74,7 +73,7 @@ const IncidentHistoryComponent = () => {
                     className={`text-sm mt-2 ${
                       task.status === "inProgress"
                         ? "text-blue-600"
-                        : task.status === "completed"
+                        : task.status === "completed" || task.status === "liberated"
                         ? "text-green-600"
                         : "text-gray-600"
                     }`}
@@ -82,9 +81,16 @@ const IncidentHistoryComponent = () => {
                     Estado:{" "}
                     {task.status === "inProgress"
                       ? "En progreso"
-                      : task.status === "completed"
+                      : task.status === "completed" ||
+                        task.status === "liberated"
                       ? "Completado"
                       : task.status}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-gray-800">
+                    Tipo de servicio:{" "}
+                    <span className="font-semibold text-gray-800">
+                      {task.serviceType}
+                    </span>
                   </p>
 
                   <div className="mt-4">

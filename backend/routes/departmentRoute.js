@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/create", authMiddleware, createDepartment);
 router.get("/getMyBuildings/:id", authMiddleware, getMyBuildings);
-router.post("/:id/createArea", authMiddleware, (inChargeMiddleware || adminMiddleware), addNewArea);
+router.post("/:id/createArea", authMiddleware, addNewArea);
 
 
 module.exports = router;

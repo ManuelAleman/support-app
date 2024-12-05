@@ -34,10 +34,26 @@ const userSchema = new mongoose.Schema({
         emun: ['none', 'hardware', 'software', 'network'],
         default: 'none'
     },
-
+    ratings: {
+        type: [Number], 
+        default: []
+    },
+    averageRating: {
+        type: Number,  // Campo para almacenar el promedio de las calificaciones
+        default: 0
+    }
 }, {
     timestamps: true
 });
+
+userSchema.methods.updateAverageRating = function() {
+    if (this.ratings.length > 0) {
+        const total = this.ratings.reduce((sum, rating) => sum + rating, 0);
+        this.averageRating = total / this.ratings.length;
+    } else {
+        this.averageRating = 0;
+    }
+};
 
 const User = mongoose.model('User', userSchema);
 

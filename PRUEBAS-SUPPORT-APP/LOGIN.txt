@@ -21,3 +21,9 @@
     "email" : "l21170309@culiacan.tecnm.mx"
     "password" : "1234"
 }
+
+/carlos
+{
+    "email" : "l21170259@culiacan.tecnm.mx"
+    "password" : "1234"
+}

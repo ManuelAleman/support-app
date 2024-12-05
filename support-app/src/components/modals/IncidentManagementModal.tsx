@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { TaskProps, UserProps, SupporterProps } from "@/utils/types";
+import React, { useState, useEffect, use } from "react";
+import { TaskProps, UserProps } from "@/utils/types";
 import Cookies from "js-cookie";
 
 interface IncidentManagementModalProps {
@@ -20,11 +20,14 @@ const IncidentManagementModal = ({
   const [priority, setPriority] = useState("low");
   const [assignedTo, setAssignedTo] = useState("");
   const [type, setType] = useState("Hardware");
-
-  const filteredUsers = user?.filter((u) => u.speciality === type) || [];
-
+  const [filteredUsers, setFilteredUsers] = useState<UserProps[]>([]);
 
   useEffect(() => {
+    setFilteredUsers(user?.filter((u) => u.speciality === type) || [])
+  },[]);
+
+  useEffect(() => {
+    console.log("Usuarios filtrados:");
     if (filteredUsers.length > 0) {
       setAssignedTo(filteredUsers[0]._id);
     } else {
@@ -91,7 +94,10 @@ const IncidentManagementModal = ({
           <select
             className="block w-full mt-1 border border-gray-600 rounded bg-gray-700 text-gray-200 px-4 py-2 transition duration-200 ease-in-out shadow-inner focus:outline-none focus:ring-2 focus:ring-red-600 hover:bg-gray-600"
             value={type}
-            onChange={(e) => setType(e.target.value)}
+            onChange={(e) => {
+              setType(e.target.value);
+              setFilteredUsers(user?.filter((u) => u.speciality === e.target.value) || []);
+            }}
           >
             <option value="Hardware">Hardware</option>
             <option value="Software">Software</option>
@@ -100,25 +106,27 @@ const IncidentManagementModal = ({
         </div>
 
         <div className="mb-4">
-  <label className="text-gray-400">Prioridad:</label>
-  <select
-    className="block w-full mt-1 border border-gray-600 rounded bg-gray-700 text-gray-200 px-4 py-2 transition duration-200 ease-in-out shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500 hover:bg-gray-600"
-    value={priority}
-    onChange={(e) => setPriority(e.target.value)}
-  >
-    <option value="low">Baja</option>
-    <option value="medium">Media</option>
-    <option value="high">Alta</option>
-  </select>
-</div>
-
+          <label className="text-gray-400">Prioridad:</label>
+          <select
+            className="block w-full mt-1 border border-gray-600 rounded bg-gray-700 text-gray-200 px-4 py-2 transition duration-200 ease-in-out shadow-inner focus:outline-none focus:ring-2 focus:ring-yellow-500 hover:bg-gray-600"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+          >
+            <option value="low">Baja</option>
+            <option value="medium">Media</option>
+            <option value="high">Alta</option>
+          </select>
+        </div>
 
         <div className="mb-4">
           <label className="text-gray-400">Asignado a:</label>
           <select
             className="block w-full mt-1 border border-gray-600 rounded bg-gray-700 text-gray-200 px-4 py-2 transition duration-200 ease-in-out shadow-inner focus:outline-none focus:ring-2 focus:ring-purple-500 hover:bg-gray-600"
             value={assignedTo}
-            onChange={(e) => setAssignedTo(e.target.value)}
+            onChange={(e) => {
+              setAssignedTo(e.target.value);
+              console.log(e.target.value);
+            }}
           >
             {filteredUsers.length > 0 ? (
               filteredUsers.map((u) => (

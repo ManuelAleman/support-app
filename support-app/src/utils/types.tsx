@@ -40,10 +40,12 @@ export interface TaskProps {
 
 export interface UserProps {
   _id: string;
+  profilePicture: string;
   name: string;
   email: string;
   role: string;
-  rating: number;
+  ratings: [];
+  averageRating: number;
   phone: string;
   speciality?: string;
 }
@@ -64,13 +66,6 @@ export interface ChangesProps {
   price: number;
   status: string;
   incident?: TaskProps;
-}
-
-export interface SupporterProps {
-  _id : string,
-  user : UserProps,
-  rating : number,
-  speciality : string,
 }
 
 export interface ProblemProps {

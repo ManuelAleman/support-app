@@ -27,6 +27,7 @@ const ProblemGestor= () => {
         },
       });
       const data = await response.json();
+      console.log('Tareas:', data);
       setTasks(data);
       setFilteredTasks(data);
     };
@@ -132,6 +133,7 @@ const ProblemGestor= () => {
       const data = await response.json();
       console.log("Nuevo problema:", data);
       setNewProblem(data.problem);
+      setProblems((prevProblems) => [...prevProblems, data.populatedProblem]);
       alert('Incidencia registrada en la base de conocimiento.');
     } catch (error) {
       console.error("Error al registrar el problema:", error);
@@ -257,7 +259,7 @@ const ProblemGestor= () => {
         </tr>
       </thead>
       <tbody>
-        {problems.map((problem) => (
+        {problems.length > 0 && problems.map((problem) => (
           <tr key={problem._id} className="hover:bg-gray-100">
             <td className="border border-gray-300 px-4 py-2">
               {problem.equipment.name || "No especificado"}

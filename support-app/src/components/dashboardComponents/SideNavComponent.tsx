@@ -23,8 +23,9 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
         h-[80vh] max-h-[72vh] md:h-auto md:max-h-none overflow-y-auto`}
       >
         <ul className="p-4 space-y-4">
-          <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
-            <AiOutlineUser className="text-blue-600 mr-2" />
+          
+        <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
+            <AiOutlineFileText className="text-blue-600 mr-2" />
             <a 
               className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
               onClick={() => { setController('profile'); setIsOpen(false); }}
@@ -149,15 +150,7 @@ const SideNavComponent = ({ setController, user }: SideNavComponentProps) => {
                   <p className="font-black">Gestion de problemas</p>
                 </a>
               </li>
-              <li className="flex items-center border border-gray-200 rounded-md p-3 bg-gray-50 hover:bg-gray-100 transition">
-                <AiOutlineSetting className="text-blue-600 mr-2" />
-                <a 
-                  className="text-blue-600 hover:text-blue-800 hover:underline transition duration-300 cursor-pointer"
-                  onClick={() => { setController('settings'); setIsOpen(false); }}
-                >
-                  <p className="font-black">Configuraciones Avanzadas</p>
-                </a>
-              </li>
+             
             </>
           )}
         </ul>

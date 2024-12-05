@@ -34,11 +34,7 @@ exports.createTask = async (req, res) => {
       assignedEquipment,
       status: { $ne: "completed" },
     });
-    if (existingTask) {
-      return res
-        .status(400)
-        .send({ error: "A task with the same equipment already exists" });
-    }
+  
 
     const task = new taskModel({
       subject,
@@ -159,7 +155,7 @@ exports.getMyGeneratedTasks = async (req, res) => {
 
 exports.getMyAssignedTasks = async (req, res) => {
   try {
-      const tasks = await taskModel.find({ assignedTo: req.body.id, status: { $ne: 'completed' } })
+      const tasks = await taskModel.find({ assignedTo: req.body.id, status: { $nin: ["completed", "liberated"] } })
           .populate({
               path: 'createdBy',
               select: 'name email role rating phone',
@@ -248,7 +244,9 @@ exports.finishTask = async (req, res) => {
 exports.getMyCompletedTasks = async (req, res) => {
   try {
     const tasks = await taskModel
-      .find({ assignedTo: req.body.id, status: "completed" })
+    .find({ 
+      assignedTo: req.body.id, 
+      status: { $in: ["completed", "liberated"] } })    
       .populate({
         path: "createdBy",
         select: "name email role rating phone",
@@ -290,12 +288,12 @@ exports.getMyCompletedTasks = async (req, res) => {
 exports.getAllCompletedTasks = async (req, res) => {
   try {
     const tasks = await taskModel
-      .find({ status: "completed" })
-      .populate({ path: "createdBy", select: "name email role rating phone" })
-      .populate({ path: "assignedEquipment", select: "name type operatingSystem available", populate: { path: "parts", select: "type model quantity" } })
-      .populate({ path: "assignedTo", select: "name email role rating phone" })
-      .populate({ path: "changes", select: "message price status", populate: { path: "piece", select: "name type model" } });
-
+    .find({ status: { $in: ["completed", "liberated"] } })
+    .populate({ path: "createdBy", select: "name email role rating phone" })
+    .populate({ path: "assignedEquipment", select: "name type operatingSystem available", populate: { path: "parts", select: "type model quantity" } })
+    .populate({ path: "assignedTo", select: "name email role rating phone" })
+    .populate({ path: "changes", select: "message price status", populate: { path: "piece", select: "name type model" } });
+  
     tasks.sort((a, b) => {
       const priorityOrder = { low: 3, medium: 2, high: 1 };
       return priorityOrder[a.priority] - priorityOrder[b.priority];
@@ -309,3 +307,78 @@ exports.getAllCompletedTasks = async (req, res) => {
     res.status(500).send({ error: "An error occurred while fetching tasks" });
   }
 };
+
+exports.setSrviceType = async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const { serviceType } = req.body;
+    const task = await taskModel
+      .findById(taskId)
+      .populate("assignedEquipment", "name type");
+    if (!task) {
+      return res.status(404).send({ error: "Task not found" });
+    }
+    task.serviceType = serviceType;
+    await task.save();
+    res.status(200).send({ message: "Service type set successfully", task });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "An error occurred while setting service type" });
+  }
+}
+
+exports.liberateIncident = async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const { rating } = req.body;
+
+    // Validar si el rating es un número entre 1 y 5
+    if (rating && (typeof rating !== "number" || rating < 1 || rating > 5)) {
+      return res.status(400).send({ error: "Rating must be a number between 1 and 5" });
+    }
+
+    // Buscar la tarea por ID
+    const task = await taskModel
+      .findById(taskId)
+      .populate("assignedEquipment", "name type")
+      .populate("assignedTo"); // Asegurarse de que la tarea tenga la referencia del usuario
+
+    if (!task) {
+      return res.status(404).send({ error: "Task not found" });
+    }
+
+    // Verificar si la tarea ya está liberada
+    if (task.status === "liberated") {
+      return res.status(400).send({ error: "Incident already liberated" });
+    }
+
+    // Actualizar el estado de la tarea
+    task.status = "liberated";
+
+    // Si se proporciona un rating, asignarlo y actualizar el promedio de calificación
+    if (rating) {
+      // Asignar la calificación al responsable de la tarea
+      task.assignedTo.ratings.push(rating); // Agregar la nueva calificación al arreglo de calificaciones
+
+      // Recalcular el promedio de calificación del usuario
+      const totalRatings = task.assignedTo.ratings.reduce((sum, rating) => sum + rating, 0);
+      task.assignedTo.averageRating = totalRatings / task.assignedTo.ratings.length; // Actualizar el promedio
+
+      // Guardar los cambios en el usuario (si es necesario)
+      await task.assignedTo.save();
+    }
+
+    // Guardar los cambios en la tarea
+    await task.save();
+
+    // Enviar respuesta
+    res.status(200).send({
+      message: "Incident liberated successfully",
+      task,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "An error occurred while liberating incident" });
+  }
+};
+

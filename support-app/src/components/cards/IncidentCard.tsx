@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TaskProps, UserProps, SupporterProps } from '@/utils/types';
+import { TaskProps, UserProps } from '@/utils/types';
 import IncidentManagementModal from '@/components/modals/IncidentManagementModal';
 
 interface CardProps {

@@ -12,6 +12,7 @@ exports.create = async (req, res) => {
       price,
       incident,
     });
+
     const task = await TaskModel.findById(incident);
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
